@@ -1,0 +1,142 @@
+{% extends 'Home.html' %}
+
+{% block title %} Participant Registration {% endblock %}
+{% block title2 %} Participant Registration {% endblock %}
+
+{% block innercontent %}
+    <div class="Event Available">
+        <fieldset>
+            <legend>Available Event Information</legend>
+            {% for item in Event_Available %}
+            <details style="font-size: 18px">
+                <summary style="font-size: 24px">{{ item.EventName }}</summary>
+                <br>
+                <b>Event-Description</b> : {{ item.Description }}<br>
+                <b>Event-Location</b> : {{ item.Location }}<br>
+                <b>Link of Poster</b> : <a href="{{ item.Link_of_Poster }}"  style="font-size:18px ; color:lightblue" >{{ item.Link_of_Poster }}</a><br>
+                <b>Event duration</b> : From {{ item.From_Date }} {{ item.From_Time }} To {{ item.To_Date }} {{ item.To_Time }}<br>
+                <b>Deadline for Registration</b> : {{ item.Dead_Date }} {{ item.Dead_Time }}<br>
+                <b>Host Name</b> : {{ item.Host_Name }}<br>
+                <b>Host Email-Id</b> : <a href="mailto:{{ item.Host_Email }}" style="font-size:18px ; color:lightblue">{{ item.Host_Email }}</a><br><br>
+
+            </details>
+            {% endfor %}
+        </fieldset>
+    </div>
+    {%  if messages %}
+         <h2 style="color:darkred; text-decoration: underline">Error :</h2>
+        {% for message in messages %}
+            <h2 style="color:darkred; text-decoration: underline">{{ message }} </h2>
+        {% endfor %}
+    {% endif %}
+    <div class="homepage">
+        <fieldset>
+            <legend>Participant Information</legend>
+            <form action={% url 'Participant-Registration' %}  class="PRegistration_Page" onsubmit="return Hide()" method="POST">
+                {% csrf_token %}
+                <label for="Name" class="ParticipantRegnpage">
+                    Name :
+                </label>
+                <input type="text" name="Name" id="Name" placeholder="--Name--" required>
+                <br>
+                <br>
+
+                 <label for="Contact" class="Registrationpage">
+                    Contact No. :
+                </label>
+                <input type="number" id="Contact" name="Contact" placeholder="--Contact No.--" required/>
+                <br>
+                <br>
+
+                <label for="email" class="loginpage2">
+                    Email-ID :
+                </label>
+                <input type="email" id="email" name="email" placeholder="--Email--">
+                <br>
+                <br>
+
+                <label for="reg" class="loginpage2">
+                    Event to Participate :
+                </label>
+                    {% for item in Event_Available %}
+                    <input type="radio" name="reg" value="{{ item.EventName }}">{{ item.EventName }}
+                    {% endfor %}
+            </select>
+                <br>
+                <br>
+
+                <label for="typeOreg" class="loginpage2">
+                    Type of Registration :
+                </label>
+                <label for="typeOreg1"></label>
+                <input type="radio" id="typeOreg1" name="typeOreg" value="Individual" oninput="NoP()" >Individual
+                <label for="typeOreg2"></label>
+                <input type="radio" id="typeOreg2" name="typeOreg" value="Group" oninput="NoP()" >Group
+                <br>
+                <br>
+
+                <label for="NoParticipant">
+                    No. of Participants :
+                </label>
+                <input type="number" id="NoParticipant" name="NoParticipant" placeholder="--Number of participants--" />
+                <br>
+                <br>
+
+
+
+                <center><input type="submit" value="Submit" id="submit" >
+                </center>
+            </form>
+        </fieldset>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+                function NoP(){
+                    if (document.getElementById('typeOreg1').checked) {
+                         document.getElementById('NoParticipant').value = "1";
+                         document.getElementById('NoParticipant').disabled = true;
+                         document.getElementById('typeOreg1').checked = "false";
+                    }
+                    else
+                    {
+                         document.getElementById('NoParticipant').disabled = false;
+                          document.getElementById('NoParticipant').value = "";
+                    }
+                }
+
+                function Hide() {
+                    //if (document.getElementById('typeOreg1').checked) {
+                  //      document.getElementById('NoParticipant').innerText = "1";
+                   // }
+
+                     if (document.getElementById('typeOreg2').checked) {
+                         if (document.getElementById('NoParticipant').value < 0) {
+                             document.getElementById('NoParticipant').style.borderColor='red';
+                             alert("Please enter Valid Number");
+                             return false;
+                         }
+                         else
+                             document.getElementById('NoParticipant').style.borderColor='wheat';
+                     }
+
+                    let a =document.getElementById('Contact').value;
+                    let b= a.toString();
+                    if(b.length != 10) {
+                        alert("Contact number is invalid. Please enter valid contact number");
+                        document.getElementById('Contact').style.borderColor='red';
+                        return false;
+                    }
+                    else
+                        document.getElementById('Contact').style.borderColor='wheat';
+
+                     if(!confirm("Are you sure to Submit?"))
+                         return false;
+
+
+                    return true;
+                }
+
+            </script>
+{% endblock %}

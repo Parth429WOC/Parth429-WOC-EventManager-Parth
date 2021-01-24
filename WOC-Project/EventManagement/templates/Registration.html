@@ -1,0 +1,180 @@
+{% extends 'Home.html' %}
+
+{% block title %} Event Registration {% endblock %}
+{% block title2 %}Event Registration{% endblock %}
+{% block innercontent %}
+     {%  if messages %}
+         <h2 style="color:darkred; text-decoration: underline">Error :</h2>
+        {% for message in messages %}
+            <h2 style="color:darkred; text-decoration: underline">{{ message }} </h2>
+        {% endfor %}
+    {% endif %}
+        <fieldset>
+            <legend>Event Information</legend>
+            <form action={% url 'Event-Registration' %} class="Registration_Page" onsubmit="return Checking()" method="POST">
+                {% csrf_token %}
+                <label for="Eventname" class="Registrationpage">
+                    EventName :
+                </label>
+                <input type="text" name="Eventname" id="Eventname" placeholder="--Event Name--" required>
+                <br>
+                <br>
+
+                 <label for="Description" class="Registrationpage">
+                    Description :
+                </label>
+                <textarea id="Description" name="Description" cols="60" rows="10" placeholder="type description of your Event here" required></textarea>
+                <br>
+                <br>
+
+                <label for="Location" class="Registrationpage">
+                    Location :
+                </label>
+                <input type="text" name="Location" id="Location" placeholder="--Location--" required>
+                <br>
+                <br>
+
+                <label for="LOP" class="Registration_Page">
+                    Link of Event's Poster :
+                </label>
+                <input type="url" id="LOP" name="LOP" placeholder="upload link of poster of your event here" required>
+                <br>
+                <br>
+
+                 <label for="sdate" class="Registration_Page">
+                <abbr title="Write the Starting time of your Event" style="text-decoration: none">From(Date+Time)</abbr> :
+                </label>
+                <input type="date" id="sdate" name="sdate">
+                <label for="stime" class="Registration_Page">
+                </label>
+                <input type="time" id="stime" name="stime">
+                &nbsp; &nbsp
+                <label for="edate" class="Registration_Page">
+                    <abbr title="Write the Ending time of your Event" style="text-decoration: none">To(Date+Time) :</abbr>
+                </label>
+                <input type="date" id="edate" name="edate">
+                <label for="etime" class="Registration_Page">
+                </label>
+                <input type="time" id="etime" name="ttime">
+                <br>
+                <br>
+
+                <label for="ddate" class="Registration_Page">
+                    <abbr title="Write the Deadline of Registration" style="text-decoration: none">Deadline(Date+Time) :</abbr>
+                </label>
+                <input type="date" id="ddate" name="deadline">
+                <label for="dtime" class="Registration_Page">
+                </label>
+                <input type="time" id="dtime" name="dtime">
+                <br>
+                <br>
+
+                 <label for="Hname" class="loginpage2">
+                    Host's Username :
+                </label>
+                <input type="text" id="Hname" name="Hname" placeholder="--Username--">
+                <br>
+                <br>
+
+                <label for="email" class="loginpage2">
+                    Host's Email-ID :
+                </label>
+                <input type="email" id="email" name="Hemail" placeholder="--Email--">
+                <br>
+                <br>
+
+                <label for="password" class="loginpage2">
+                     Password :
+                </label>
+                <input type="password" id="password" name="password" placeholder="--Password--" oninput=" Pcheck() ">
+                <ul><li style="color:rgb(172,129,66)">Password should contain atleast 8 characters</li></ul>
+                <br>
+                <label for="Cpassword" class="loginpage2">
+                    Confirm Password :
+                </label>
+                <input type="password" id="Cpassword" name="Cpassword" placeholder="--Password--">
+                <br>
+                <br>
+
+                <center><input type="submit" value="Submit" id="submit">
+                </center>
+            </form>
+        </fieldset>
+{% endblock %}
+{% block scripts %}
+  <script>
+
+    function Pcheck(){
+        element = document.getElementById('password').value;
+        element= element.toString();
+        if (element.length < 8) {
+
+                document.getElementById('password').style.borderColor='red';
+        }
+        else
+        {
+            document.getElementById('password').style.borderColor='wheat';
+        }
+    }
+
+    function Checking(){
+
+        if(document.getElementById('sdate').value > document.getElementById('edate').value )
+        {
+            alert("End date should be after starting date. please enter valid end date");
+            document.getElementById('edate').style.borderColor='red';
+            return false;
+        }
+        else {
+            if ((document.getElementById('sdate').value == document.getElementById('edate').value) && (document.getElementById('stime').value > document.getElementById('etime').value)) {
+                alert("End time should be after starting time. please enter valid end time");
+                document.getElementById('etime').style.borderColor = 'red';
+                return false;
+            }
+            else{
+                 document.getElementById('edate').style.borderColor='wheat';
+                  document.getElementById('etime').style.borderColor='wheat';
+            }
+        }
+
+        if (document.getElementById('ddate').value > document.getElementById('edate').value) {
+                alert("Deadline for Registration should be after Ending date. please put valid end Deadline");
+                document.getElementById('ddate').style.borderColor = 'red';
+                return false;
+        }
+        else
+        {
+            document.getElementById('ddate').style.borderColor='wheat';
+        }
+
+        element = document.getElementById('password').value;
+        element= element.toString();
+        if (element.length < 8) {
+            alert('Password must contain atleast 8 characters')
+            document.getElementById('password').style.borderColor='red';
+        }
+        else
+        {
+            document.getElementById('password').style.borderColor='wheat';
+        }
+
+        if(document.getElementById('password').value != document.getElementById('Cpassword').value)
+        {
+            alert("Confirm password doesn't match. Please check your Password");
+                document.getElementById('password').style.borderColor = 'red';
+                 document.getElementById('Cpassword').style.borderColor = 'red';
+                return false;
+        }
+        else{
+            document.getElementById('password').style.borderColor='wheat';
+            document.getElementById('Cpassword').style.borderColor='wheat';
+        }
+
+
+            if(!confirm("Are you sure to submit?"))
+                return false;
+
+            return true;
+    }
+  </script>
+{% endblock %}

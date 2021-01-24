@@ -1,0 +1,83 @@
+{% extends 'Home.html' %}
+
+{% block title %} Event DashBoard {% endblock %}
+{% block title2 %} Event DashBoard {% endblock %}
+
+{% block innercontent %}
+    {%  if messages %}
+         <h2 style="color:darkred; text-decoration: underline">Error :</h2>
+        {% for message in messages %}
+            <h2 style="color:darkred; text-decoration: underline">{{ message }} </h2>
+        {% endfor %}
+    {% endif %}
+    <fieldset>
+            <legend> Event DashBoard</legend>
+            <form action={% url 'Event-Dashboard' %}  class="PRegistration_Page"  method="POST">
+                {% csrf_token %}
+                 <label for="Id" class="Registrationpage">
+                    Event-Id :
+                </label>
+                <input type="number" id="Id" name="Id" placeholder="--Event-ID--" required/>
+                <br>
+                <br>
+
+                <label for="password" class="loginpage2">
+                    Password :
+                </label>
+                <input type="password" id="password" name="password" placeholder="--Enter Password--">
+                <br>
+                <br>
+
+                <center><input type="submit" value="Submit" id="submit" >
+                </center>
+            </form>
+        </fieldset>
+        <div class="table">
+            {% if is_participant %}
+                <br>
+                <div class="event info" style="width: 60%; margin: auto; color: chocolate">
+                 <h3>Host of Event: {{ event.Host_Name }} </h3>
+                <h3>Event Name: {{ event.EventName }} </h3>
+                 <h3 style="text-align: right">Status: {{ event.Status }} </h3>
+                <hr>
+                </div>
+            <center><h2 style="text-decoration: underline; color:rgb(238, 172, 74)">Details of Participants:</h2></center>
+                <br>
+                <br>
+                 {% if  part.0.Name == null %}
+                     <h2> No-one take part in your event yet.</h2>
+                 {% endif %}
+                 {% if part.0.Name != null %}
+                     <center>
+                     <table border='3px' cellpadding="5px" cellspacing="2px">
+                         <thead>
+                         <tr>
+                             <th>ID</th>
+                             <th>Participant Name</th>
+                             <th>Contact No.</th>
+                             <th>Email-ID</th>
+                             <th>Type of Registration</th>
+                             <th>No. of Participant</th>
+                         </tr>
+                        </thead>
+
+                         <tbody>
+                         {% for temp in part %}
+                             <tr>
+                                 <td>{{ temp.id }}</td>
+                                 <td>{{ temp.Name }}</td>
+                                 <td>{{ temp.Contact_No }}</td>
+                                 <td>{{ temp.Email }}</td>
+                                 <td>{{ temp.Type_Of_Registration }}</td>
+                                 <td>{{ temp.No_Of_Participant }}</td>
+                             </tr>
+                         {% endfor %}
+                         </tbody>
+                     </table>
+                 {% endif %}
+            </center>
+            {% endif %}
+        <br>
+        </div>
+        <br>
+{% endblock %}
